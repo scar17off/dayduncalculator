@@ -11,9 +11,8 @@ const pixelsy1 = 87;
 const botCount = 1;
 let bots = [];
 const imagedir = "./calc.png";
-const wsurl = "ws://ourworldofpixels.com";
+const wsurl = "ws://ourworldofpixels.com/:443";
 const httpurl = "https://ourworldofpixels.com";
-const world = "main";
 const pos = [-32, -48];
 const timestart = 100;
 const wolfMove = true
@@ -268,22 +267,6 @@ var connect = function() {
         });
         bot.on("open", function() {
             bots.push(bot);
-            var ints = [];
-            for (var i = 0; i < world.length && i < 24; i++) {
-                var charCode = world.charCodeAt(i);
-                if ((charCode < 123 && charCode > 96) || (charCode < 58 && charCode > 47) || charCode == 95 || charCode == 46) {
-                    ints.push(charCode);
-                }
-            }
-            console.log("owop open!");
-            console.log(ints + " " + i)
-            var array = new ArrayBuffer(ints.length + 2);
-            var dv = new DataView(array);
-            for (var i = ints.length; i--;) {
-                dv.setUint8(i, ints[i]);
-            }
-            dv.setUint16(ints.length, 4321, true);
-            bot.send(array);
         });
         bot.on("message", async function(data) {
     
@@ -464,13 +447,6 @@ var connect = function() {
                                 //function startput() {
                                 //function startput1(x1,y1) {
                                 redraw(x, y);
-                                let buffer = new Buffer(12);
-                                buffer.writeInt32LE(xte * 16, 0);
-                                buffer.writeInt32LE(yte * 16, 4);
-                                buffer.writeUInt8(0, 8);
-                                buffer.writeUInt8(0, 9);
-                                buffer.writeUInt8(0, 10);
-                                buffer.writeUInt8(0, 11);
                                 //owopBot.send(buffer);
                                 //proxy1.send(buffer);
                                 //proxy2.send(buffer);
@@ -497,13 +473,6 @@ var connect = function() {
                                 //function startput() {
                                 //function startput1(x1,y1) {
                                 redraw(x, y);
-                                let buffer = new Buffer(12);
-                                buffer.writeInt32LE(xte * 16, 0);
-                                buffer.writeInt32LE(yte * 16, 4);
-                                buffer.writeUInt8(0, 8);
-                                buffer.writeUInt8(0, 9);
-                                buffer.writeUInt8(0, 10);
-                                buffer.writeUInt8(0, 11);
                                 //owopBot.send(buffer);
                                 //proxy1.send(buffer);
                                 //proxy2.send(buffer);
@@ -531,13 +500,6 @@ var connect = function() {
                                 //function startput1(x1,y1) {
                                 //if(((calcData[index] != color[0] || calcData[index + 1] != color[1] || calcData[index + 2] != color[2]))) return;
                                 redraw(x, y);
-                                let buffer = new Buffer(12);
-                                buffer.writeInt32LE(xte * 16, 0);
-                                buffer.writeInt32LE(yte * 16, 4);
-                                buffer.writeUInt8(0, 8);
-                                buffer.writeUInt8(0, 9);
-                                buffer.writeUInt8(0, 10);
-                                buffer.writeUInt8(0, 11);
                                 //owopBot.send(buffer);
                                 //proxy1.send(buffer);
                                 //proxy2.send(buffer);
@@ -552,33 +514,13 @@ var connect = function() {
                         }
                         break;
                     case 5: // Captcha
-                        switch (data.readUInt8(1)) {
-                            case 0:
-                                bot.send("CaptchALETMEINPLS" + adminPass);
-                                break;
-                            case 3:
-                                bot.send(new Buffer(world.split("").map(function(a) {
-                                    return a.charCodeAt(0);
-                                }).concat([57, 5])));
-                                break;
-                        }
-                        break;
-                    case 7:
-                        let x1 = data.readInt32LE(1);
-                        let y1 = data.readInt32LE(5);
-                        let newState = data.readInt8(9);
-                        var buffer = new Buffer(10); //32 48
-                        buffer.writeInt32LE(x1 * (256 / 256), 0);
-                        buffer.writeInt32LE(y1 * (256 / 256), 4);
-                        buffer.writeUInt8(0, 8);
-                        if (x1 < 1 || y1 < 2 || x1 > 4 || y1 > 6 || newState == 0) {} else {
-                            bot.send(buffer);
-                        }
+                        
+                    case 6:
                 }
             }
         });
-        bot.on("error", function() {
-            console.log("proxy 0 error!!!");
+        bot.on("error", function(e) {
+            console.log("proxy 0 error!!!"+e);
             //setTimeout(proxy5, 1);
         });
         bot.on("close", function() {
@@ -609,80 +551,6 @@ var i1 = 120;
 var i2 = 240;
 var speeds = 0.003; // 0.15 by default
 async function starting() {
-    let buffer = new Buffer(12);
-    buffer.writeInt32LE(0 * 16, 0);
-    buffer.writeInt32LE(0 * 16, 4);
-    buffer.writeUInt8(0, 8);
-    buffer.writeUInt8(0, 9);
-    buffer.writeUInt8(0, 10);
-    buffer.writeUInt8(0, 11);
-    //owopBot.send(buffer);
-    buffer = new Buffer(11);
-    buffer.writeInt32LE(16, 0);
-    buffer.writeInt32LE(32, 4);
-    buffer.writeUInt8(0, 8);
-    buffer.writeUInt8(0, 9);
-    buffer.writeUInt8(0, 10);
-    for(let i in bots) bots[i].send(buffer);
-    buffer = new Buffer(11);
-    buffer.writeInt32LE(16, 0);
-    buffer.writeInt32LE(32, 4);
-    buffer.writeUInt8(255, 8);
-    buffer.writeUInt8(255, 9);
-    buffer.writeUInt8(255, 10);
-    for(let i in bots) bots[i].send(buffer);
-    buffer = new Buffer(11);
-    buffer.writeInt32LE(79, 0);
-    buffer.writeInt32LE(32, 4);
-    buffer.writeUInt8(0, 8);
-    buffer.writeUInt8(0, 9);
-    buffer.writeUInt8(0, 10);
-    for(let i in bots) bots[i].send(buffer);
-    buffer = new Buffer(11);
-    buffer.writeInt32LE(79, 0);
-    buffer.writeInt32LE(32, 4);
-    buffer.writeUInt8(255, 8);
-    buffer.writeUInt8(255, 9);
-    buffer.writeUInt8(255, 10);
-    for(let i in bots) bots[i].send(buffer);
-    buffer = new Buffer(11);
-    buffer.writeInt32LE(16, 0);
-    buffer.writeInt32LE(111, 4);
-    buffer.writeUInt8(0, 8);
-    buffer.writeUInt8(0, 9);
-    buffer.writeUInt8(0, 10);
-    for(let i in bots) bots[i].send(buffer);
-    buffer = new Buffer(11);
-    buffer.writeInt32LE(16, 0);
-    buffer.writeInt32LE(111, 4);
-    buffer.writeUInt8(255, 8);
-    buffer.writeUInt8(255, 9);
-    buffer.writeUInt8(255, 10);
-    for(let i in bots) bots[i].send(buffer);
-    buffer = new Buffer(11);
-    buffer.writeInt32LE(79, 0);
-    buffer.writeInt32LE(111, 4);
-    buffer.writeUInt8(0, 8);
-    buffer.writeUInt8(0, 9);
-    buffer.writeUInt8(0, 10);
-    for(let i in bots) bots[i].send(buffer);
-    buffer = new Buffer(11);
-    buffer.writeInt32LE(79, 0);
-    buffer.writeInt32LE(111, 4);
-    buffer.writeUInt8(255, 8);
-    buffer.writeUInt8(255, 9);
-    buffer.writeUInt8(255, 10);
-    for(let i in bots) bots[i].send(buffer);
-    var xte = 48 * 16
-    var yte = 72 * 16
-    buffer = new Buffer(12); //32 48
-    buffer.writeInt32LE(xte + infnX(i0) * 500, 0);
-    buffer.writeInt32LE(yte + infnY(i0) * 500, 4);
-    buffer.writeUInt8(0, 8);
-    buffer.writeUInt8(0, 9);
-    buffer.writeUInt8(0, 10);
-    buffer.writeUInt8(0, 11);
-    for(let i in bots) bots[i].send(buffer);
     i0 = i0 + speeds;
     i1 = i1 + speeds;
     i2 = i2 + speeds;
@@ -775,75 +643,11 @@ var limited = 0;
 //setTimeout(starts, 1);
 
 function startagain() {
-    if (limited == 1) setTimeout(starts, 1);
+    if (limited == 1) setTimeout(starting, 1);
 }
 
 var x = 7;
 var y = 5;
-
-function lFls() {
-    var buffer = new Buffer(12);
-    buffer.writeInt32LE(99999999 * 16, 0);
-    buffer.writeInt32LE(99999999 * 16, 4);
-    buffer.writeUInt8(0, 8);
-    buffer.writeUInt8(0, 9);
-    buffer.writeUInt8(0, 10);
-    buffer.writeUInt8(0, 11);
-    for(let i in bots) bots[i].send(buffer);
-    setTimeout(lFls, 1)
-}
-setTimeout(lFls, 5000)
-async function protects() {
-    for (let xx = x; xx < (x + 1); xx++) {
-        x++;
-        for (let yy = y; yy < (y + 1); yy++) {
-            y++;
-            if (y > 7) {
-                y = 1;
-            }
-            if (x > 5) {
-                x = 0;
-            }
-            var buffer = new Buffer(10); //32 48
-            buffer.writeInt32LE(x * (256 / 256), 0);
-            buffer.writeInt32LE(y * (256 / 256), 4);
-            buffer.writeUInt8(1, 8);
-            for(let i in bots) bots[i].send(buffer);
-            buffer = new Buffer(10); //32 48
-            buffer.writeInt32LE(x * (256 / 256), 0);
-            buffer.writeInt32LE(y * (256 / 256), 4);
-            buffer.writeUInt8(0, 8);
-            for(let i in bots) bots[i].send(buffer);
-            //await sleep(200)
-            //console.log(x + ' ' + y)
-        }
-    }
-    setTimeout(protects, 300);
-
-    setTimeout(protects1, 300);
-}
-
-function protects1() {
-    for (let yy = y * 16; yy < (y + 1); yy++) {
-        y++;
-        for (let xx = x * 16; xx < (x + 1); xx++) {
-            x++;
-            if (x > 10) {
-                x = -10;
-            }
-            if (y > 10) {
-                y = -10;
-            }
-            var buffer = new Buffer(10); //32 48
-            buffer.writeInt32LE(x * (256 / 256), 0);
-            buffer.writeInt32LE(y * (256 / 256), 4);
-            buffer.writeUInt8(0, 8);
-            for(let i in bots) bots[i].send(buffer);
-            //console.log(x + ' ' + y)
-        }
-    }
-}
-setTimeout(protects, 1000);
 
 function random(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
