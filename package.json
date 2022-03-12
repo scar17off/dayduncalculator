@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "canvas": "^2.7.0",
+    "fs": "0.0.1-security",
+    "owop-js": "^2.1.5",
+    "ws": "^7.4.4"
+  }
+}
